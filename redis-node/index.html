@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Chat with Redis</title>
+</head>
+
+<body>
+    <ul id="messages">
+        <!-- chat messages go here -->
+    </ul>
+
+    <form id="chatform" action="">
+        <input id="chattext" type="text" value="" />
+        <input type="submit" value="Send" />
+    </form>
+</body>
+
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js">
+</script>
+<script src="http://localhost:8000/socket.io/socket.io.js">
+</script>
+
+<script>
+    var socket = io.connect('localhost', { port: 8000 });
+
+    socket.on('message', function (data) {
+        var li = new Element('li').insert(data);
+       console.log("msg")
+        $('messages').insert({ top: li });
+    })
+</script>
+
+<script>
+    $('#chatform').submit(function () {
+        socket.emit('message', $('chattext').val());
+        $('chattext').val(""); // cleanup the field
+        return false;
+    });
+</script>
